@@ -8,7 +8,7 @@ export function instaniateAllFilesFromFolder(scene, clickableGroups, roomBox) {
 
     for (const path in files) {
         files[path]().then(url => {
-            instantiateObject(url, scene, clickableGroups,roomBox);
+            instantiateObject(url, scene, clickableGroups, roomBox);
         });
     }
 }
@@ -17,7 +17,6 @@ export function instaniateAllFilesFromFolder(scene, clickableGroups, roomBox) {
 export function instantiateObject(url, scene, clickableGroups, roomBox) {
     const clickableNames = ['VR', 'Ashtray', 'Guest-book', 'Teleskop', 'Resume', 'Laptop', 'Date', 'Smartphone'];
     const filename = url.split('/').pop().split('.')[0];
-    console.log('Loading:', filename);
     const gradientMap = new THREE.TextureLoader().load(
         'https://threejs.org/examples/textures/gradientMaps/threeTone.jpg'
     );
@@ -33,7 +32,8 @@ export function instantiateObject(url, scene, clickableGroups, roomBox) {
             if (clickableNames.some(n => filename.includes(n))) {
                 parent.userData.clickable = true;
                 clickableGroups.push(parent);
-                console.log('Marking parent clickable:', filename);
+                console.log('Room bounding box:', roomBox.min, roomBox.max);
+
             }
 
             // Optional: tetap traverse child buat setup shadow, material, dll
@@ -44,10 +44,12 @@ export function instantiateObject(url, scene, clickableGroups, roomBox) {
                 }
             });
             // If this model is the room, set the box:
-            if (filename===('Room')) {
+            scene.add(parent);
+
+            if (url.includes('Room')) {
                 roomBox.setFromObject(parent);
             }
-            scene.add(parent);
+
         },
         undefined,
         function (error) {
