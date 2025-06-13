@@ -63,10 +63,13 @@ window.addEventListener('pointermove', (event) => {
         getOutlinePass().selectedObjects = [];
     }
 });
+
 let clickableGroups = [];
 
+const roomBox = new THREE.Box3();
+
 // === 8. Load all models ===
-instaniateAllFilesFromFolder(scene, clickableGroups);
+instaniateAllFilesFromFolder(scene, clickableGroups,roomBox);
 
 // === 9. Window Resize ===
 window.addEventListener('resize', () => {
@@ -79,20 +82,18 @@ window.addEventListener('resize', () => {
 });
 
 // === 10. Optional: Camera Clamping ===
-// const roomBox = new THREE.Box3().setFromCenterAndSize(
-//     new THREE.Vector3(0, 2.5, 0),
-//     new THREE.Vector3(10, 5, 10)
-// );
-// function clampCameraWithBox() {
-//     const clamped = roomBox.clampPoint(camera.position, new THREE.Vector3());
-//     camera.position.copy(clamped);
-// }
+
+
+function clampCameraWithBox() {
+    const clamped = roomBox.clampPoint(camera.position, new THREE.Vector3());
+    camera.position.copy(clamped);
+}
 
 // === 11. Animation Loop ===
 function animate() {
     requestAnimationFrame(animate);
     getCameraControls().update();
-    //clampCameraWithBox();
+    clampCameraWithBox();
     getComposer().render();
 }
 animate();

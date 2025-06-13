@@ -3,20 +3,19 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ✅ Fungsi memuat semua file di folder
-export function instaniateAllFilesFromFolder(scene, clickableGroups) {
+export function instaniateAllFilesFromFolder(scene, clickableGroups, roomBox) {
     const files = import.meta.glob('./src/*.glb', { as: 'url' });
 
     for (const path in files) {
         files[path]().then(url => {
-            instantiateObject(url, scene, clickableGroups);
+            instantiateObject(url, scene, clickableGroups,roomBox);
         });
     }
 }
 
 // ✅ Fungsi load 1 GLB & register parent group sebagai clickable
-export function instantiateObject(url, scene, clickableGroups) {
+export function instantiateObject(url, scene, clickableGroups, roomBox) {
     const clickableNames = ['VR', 'Ashtray', 'Guest-book', 'Teleskop', 'Resume', 'Laptop', 'Date', 'Smartphone'];
-    const ignoreNames = ['Object_238001', 'Object_228001'];
     const filename = url.split('/').pop().split('.')[0];
     console.log('Loading:', filename);
     const gradientMap = new THREE.TextureLoader().load(
@@ -44,7 +43,10 @@ export function instantiateObject(url, scene, clickableGroups) {
                     child.receiveShadow = true;
                 }
             });
-
+            // If this model is the room, set the box:
+            if (filename===('Room')) {
+                roomBox.setFromObject(parent);
+            }
             scene.add(parent);
         },
         undefined,
