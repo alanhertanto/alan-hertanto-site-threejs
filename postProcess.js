@@ -23,6 +23,11 @@ export function initProcessing(renderer, scene, camera) {
         scene,
         camera
     );
+    outlinePass.edgeStrength = 10;
+    outlinePass.visibleEdgeColor.set('#ffffff');
+    outlinePass.hiddenEdgeColor.set('#190a05');
+    outlinePass.edgeGlow = 0.215;
+    outlinePass.edgeThickness = 1.5;
     outlinePassGet = outlinePass;
     composer.addPass(outlinePass);
     composerGet = composer;
