@@ -17,7 +17,8 @@ export function instaniateAllFilesFromFolder(scene, clickableGroups) {
 export function instantiateObject(url, scene, clickableGroups) {
     const clickableNames = ['VR', 'Ashtray', 'Guest-book', 'Teleskop', 'Resume', 'Laptop', 'Date', 'Smartphone'];
     const ignoreNames = ['Object_238001', 'Object_228001'];
-
+    const filename = url.split('/').pop().split('.')[0];
+    console.log('Loading:', filename);
     const gradientMap = new THREE.TextureLoader().load(
         'https://threejs.org/examples/textures/gradientMaps/threeTone.jpg'
     );
@@ -29,23 +30,20 @@ export function instantiateObject(url, scene, clickableGroups) {
         url,
         function (gltf) {
             const parent = gltf.scene; // treat root node as group
-            let hasClickableChild = false;
+            const root = gltf.scene.children[0];
+            if (clickableNames.some(n => filename.includes(n))) {
+                parent.userData.clickable = true;
+                clickableGroups.push(parent);
+                console.log('Marking parent clickable:', filename);
+            }
 
+            // Optional: tetap traverse child buat setup shadow, material, dll
             parent.traverse(child => {
                 if (child.isMesh) {
                     child.castShadow = true;
                     child.receiveShadow = true;
-
-                    if (clickableNames.some(n => child.name.includes(n)) && !ignoreNames.includes(child.name)) {
-                        hasClickableChild = true;
-                    }
                 }
             });
-
-            if (hasClickableChild) {
-                parent.userData.clickable = true;
-                clickableGroups.push(parent); // ✅ push parent group
-            }
 
             scene.add(parent);
         },
