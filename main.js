@@ -24,7 +24,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 // === 3. Controls ===
-initCameraControls(camera,renderer);
+initCameraControls(camera, renderer);
 
 // === 4. Lighting ===
 initLighting(scene);
@@ -34,7 +34,6 @@ initProcessing(renderer, scene, camera);
 // === 6. Raycaster ===
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const clickableMeshes = [];
 
 // === 7. Handle Pointer Move ===
 window.addEventListener('pointermove', (event) => {
@@ -42,18 +41,32 @@ window.addEventListener('pointermove', (event) => {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(clickableMeshes, true);
+    const intersects = raycaster.intersectObjects(scene.children, true); // true = recursive
 
     if (intersects.length > 0) {
-        const hoveredObject = intersects[0].object;
-        getOutlinePass().selectedObjects = [hoveredObject];
+        const hitObject = intersects[0].object;
+        // Naik ke parent yang clickable
+        let group = hitObject;
+        while (group && !group.userData.clickable) {
+            group = group.parent;
+        }
+
+        if (group && group.userData.clickable) {
+            // apply outline ke group
+            clickableGroups = group;
+            getOutlinePass().selectedObjects = [clickableGroups];
+        } else {
+            getOutlinePass().selectedObjects = [];
+        }
+
     } else {
         getOutlinePass().selectedObjects = [];
     }
 });
+let clickableGroups = [];
 
 // === 8. Load all models ===
-instaniateAllFilesFromFolder(scene, clickableMeshes);
+instaniateAllFilesFromFolder(scene, clickableGroups);
 
 // === 9. Window Resize ===
 window.addEventListener('resize', () => {
