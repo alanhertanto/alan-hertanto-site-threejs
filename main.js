@@ -69,7 +69,7 @@ let clickableGroups = [];
 const roomBox = new THREE.Box3();
 
 // === 8. Load all models ===
-instaniateAllFilesFromFolder(scene, clickableGroups,roomBox);
+instaniateAllFilesFromFolder(scene, clickableGroups, roomBox);
 
 // === 9. Window Resize ===
 window.addEventListener('resize', () => {
@@ -85,17 +85,23 @@ window.addEventListener('resize', () => {
 
 
 function clampCameraWithBox() {
-    const clamped = roomBox.clampPoint(camera.position, new THREE.Vector3());
-    camera.position.copy(clamped);
+    if (!roomBox.isEmpty()) {
+        const clamped = roomBox.clampPoint(camera.position, new THREE.Vector3());
+        camera.position.copy(clamped);
+    }
 }
+const controls = getCameraControls();
+const clampedTarget = roomBox.clampPoint(controls.target, new THREE.Vector3());
+controls.target.copy(clampedTarget);
 
 // === 11. Animation Loop ===
 function animate() {
     requestAnimationFrame(animate);
-    getCameraControls().update();
-    clampCameraWithBox();
-    getComposer().render();
+    getCameraControls().update();       // orbit controls update
+    clampCameraWithBox();               // THEN clamp camera
+    getComposer().render();            // then render
 }
+
 animate();
 
 // === 12. Optional: Exposure Debug ===
