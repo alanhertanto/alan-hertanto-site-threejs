@@ -28,7 +28,7 @@ instaniateAllFilesFromFolder(scene, clickableGroups);
 const lastCameraState = createCameraState(camera, getCameraControls());
 
 initDebugControls(scene);
-initAllListener(camera,scene, getCameraControls(), clickableGroups,getRendererControls());
+initAllListener(camera, getCameraControls(), clickableGroups,getRendererControls());
 // === 11. Animation Loop ===
 function animate() {
     requestAnimationFrame(animate);
