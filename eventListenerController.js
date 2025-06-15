@@ -13,7 +13,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        const intersects = raycaster.intersectObjects(clickableGroups, true);
 
         if (intersects.length > 0) {
             let group = intersects[0].object;
@@ -61,28 +61,23 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true); // true = recursive
+        const intersects = raycaster.intersectObjects(clickableGroups, true);
 
         if (intersects.length > 0) {
-            const hitObject = intersects[0].object;
-            // Naik ke parent yang clickable
-            let group = hitObject;
+            let group = intersects[0].object;
             while (group && !group.userData.clickable) {
                 group = group.parent;
             }
-
             if (group && group.userData.clickable) {
-                // apply outline ke group
-                clickableGroups = group;
-                getOutlinePass().selectedObjects = [clickableGroups];
+                getOutlinePass().selectedObjects = [group];
             } else {
                 getOutlinePass().selectedObjects = [];
             }
-
         } else {
             getOutlinePass().selectedObjects = [];
         }
     });
+
 
     window.exposure = 1.2;
     window.addEventListener('keydown', (e) => {
