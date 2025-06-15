@@ -132,6 +132,8 @@ export function focusCamera(camera, controls, params) {
 
             controls.target.set(tweenObj.tgtX, tweenObj.tgtY, tweenObj.tgtZ);
             controls.update();
+        },onComplete:()=>{
+              document.getElementById('ui-buttons').style.display = 'flex';
         }
     });
 }
