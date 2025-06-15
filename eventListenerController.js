@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { getCameraControls } from './cameraController.js';
 import { getOutlinePass } from './postProcessController.js';
+import { focusCamera } from './helper.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -25,30 +26,30 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                 const config = group.userData.cameraConfig;
 
                 if (config) {
-                    // 1) Set controls target jika ada
-                    if (config.controls_target) {
-                        controls.target.fromArray(config.controls_target);
-                    }
+                    const controls = getCameraControls();
 
-                    // 2) Hitung posisi kamera
+                    // Compute new camera position from target + distance if needed
+                    let camPos;
                     if (config.controls_target && config.controls_distance) {
                         const target = new THREE.Vector3().fromArray(config.controls_target);
                         const dir = new THREE.Vector3().fromArray(config.position).sub(target).normalize();
-                        const newPos = target.clone().add(dir.multiplyScalar(config.controls_distance));
-                        camera.position.copy(newPos);
-                    } else if (config.position) {
-                        camera.position.fromArray(config.position);
+                        camPos = target.clone().add(dir.multiplyScalar(config.controls_distance));
+                    } else {
+                        camPos = new THREE.Vector3().fromArray(config.position);
                     }
 
-                    // 3) Atur FOV & Zoom jika ada
-                    if (config.fov !== undefined) camera.fov = config.fov;
-                    if (config.zoom !== undefined) camera.zoom = config.zoom;
-                    camera.updateProjectionMatrix();
+                    focusCamera(camera, controls,
+                        {
+                            position: camPos,
+                            target: config.controls_target,
+                            fov: config.fov,
+                            zoom: config.zoom,
+                            duration: 1.5
+                        }
+                    );
 
-                    controls.update();
+                    console.log('Clicking on:', group.name);
                 }
-
-                console.log('Clicking on:', group.name);
             }
         }
     });
