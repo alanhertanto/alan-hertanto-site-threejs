@@ -1,0 +1,18 @@
+#ui-buttons {
+  position: fixed;   /* Stay in place on screen */
+  bottom: 20px;      /* 20px from bottom edge */
+  left: 20px;        /* 20px from left edge */
+  display: none;     /* Hidden by default */
+  flex-direction: column;  /* Stack multiple buttons vertically, but you’ll have only 1 */
+  gap: 10px;         /* Space between buttons if more than one */
+  z-index: 1000;     /* Make sure it's above the canvas */
+ width: 350px;
+ height: 350px;
+}
+#ui-buttons button {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  width: inherit;
+  height: inherit;
+}
