@@ -1,14 +1,22 @@
 #ui-buttons {
-  position: fixed;   /* Stay in place on screen */
-  bottom: 20px;      /* 20px from bottom edge */
-  left: 20px;        /* 20px from left edge */
-  display: none;     /* Hidden by default */
-  flex-direction: column;  /* Stack multiple buttons vertically, but you’ll have only 1 */
-  gap: 10px;         /* Space between buttons if more than one */
-  z-index: 1000;     /* Make sure it's above the canvas */
- width: 350px;
- height: 350px;
+  position: fixed;
+  /* Stay in place on screen */
+  bottom: 20px;
+  /* 20px from bottom edge */
+  left: 20px;
+  /* 20px from left edge */
+  display: none;
+  /* Hidden by default */
+  flex-direction: column;
+  /* Stack multiple buttons vertically, but you’ll have only 1 */
+  gap: 10px;
+  /* Space between buttons if more than one */
+  z-index: 1000;
+  /* Make sure it's above the canvas */
+  width: 150px;
+  height: 150px;
 }
+
 #ui-buttons button {
   padding: 8px 16px;
   font-size: 14px;
@@ -16,8 +24,26 @@
   width: inherit;
   height: inherit;
 }
-#btn1{
+
+#btn1 {
   background-image: url("src/UI/Button/Arrow\ Back.png");
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: transparent !important;
+  border: none;
+  margin-bottom: 10px;
+  box-shadow: none;
 }
+
+#side-modal {
+  display: none;
+  position: absolute; /* or absolute as needed */
+  top: 50%;
+  right:10%;
+  width: 300px;
+  height: 300px;
+  background: white;
+  transform: translateX(100%); /* Start offscreen */
+  transition: transform 0.3s ease; /* Optional fallback */
+}
+

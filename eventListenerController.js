@@ -1,13 +1,37 @@
 import * as THREE from 'three';
 import { getCameraControls } from './cameraController.js';
-import { getOutlinePass } from './postProcessController.js';
-import { focusCamera } from './helper.js';
+import { getOutlinePass, getComposer } from './postProcessController.js';
+import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, closeSideModal } from './helper.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-// === 7. Handle Pointer Move ===
+export function addButtonListenerForCameraMovement(button, controls, camera) {
+    button.addEventListener('click', () => {
+
+        // Register once — do NOT register this every click!
+        const closeBtn = document.getElementById('close-modal');
+        if (closeBtn && !closeBtn.dataset.listenerAdded) {
+            closeBtn.addEventListener('click', () => closeSideModal("#side-modal"));
+            closeBtn.dataset.listenerAdded = "true";
+        }
+
+        focusCameraWithoutComplete(camera, controls, {
+            target: new THREE.Vector3(0, 0, 0),
+            position: new THREE.Vector3(5, 4, 5),
+            fov: 75,
+            zoom: 1,
+            duration: 1.5
+        });
+
+        console.log('Button clicked:', button.name);
+        document.getElementById('ui-buttons').style.display = 'none';
+    });
+}
+
 export function initAllListener(camera, scene, clickableGroups, renderer) {
+
+
     window.addEventListener('click', (event) => {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -38,7 +62,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                         camPos = new THREE.Vector3().fromArray(config.position);
                     }
 
-                    focusCamera(camera, controls,
+                    focusCameraWithEvent(camera, controls,
                         {
                             position: camPos,
                             target: config.controls_target,

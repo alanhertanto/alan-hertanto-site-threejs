@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
-import { instaniateAllFilesFromFolder, focusCamera } from './helper.js';
+import { instaniateAllFilesFromFolder } from './helper.js';
 import { initLighting } from './lightingController.js';
 import { getCameraControls, initCameraControls } from './cameraController.js';
 import { getComposer, initProcessing } from './postProcessController.js';
 import { initRendererControls,getRendererControls } from './rendererController.js';
-import { initAllListener } from './eventListenerController.js';
+import { initAllListener,addButtonListenerForCameraMovement } from './eventListenerController.js';
 import { initDebugControls,checkCameraChanges,createCameraState } from './debugController.js';
 
 const scene = new THREE.Scene();
@@ -29,6 +29,9 @@ const lastCameraState = createCameraState(camera, getCameraControls());
 
 initDebugControls(scene);
 initAllListener(camera, getCameraControls(), clickableGroups,getRendererControls());
+//testing the button later be refactored.
+const button1 = document.getElementById('btn1');
+addButtonListenerForCameraMovement(button1,getCameraControls(),camera);
 // === 11. Animation Loop ===
 function animate() {
     requestAnimationFrame(animate);
