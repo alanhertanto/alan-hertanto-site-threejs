@@ -16,3 +16,8 @@
   width: inherit;
   height: inherit;
 }
+#btn1{
+  background-image: url("src/UI/Button/Arrow\ Back.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
