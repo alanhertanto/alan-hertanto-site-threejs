@@ -180,20 +180,27 @@ export function focusCameraWithEvent(camera, controls, params, customEvent) {
     });
 }
 
-// Slide in the modal with GSAP (reuse your helper if you like)
-export function openGalleryModal() {
-    gsap.to("#side-modal-with-gallery", {
-        right: 0,
+export function openGalleryModal(modalSelector = "#side-modal-with-gallery") {
+    gsap.to(modalSelector, {
+        x: 0,
         duration: 0.5,
-        ease: "power2.out"
+        ease: "power2.out",
+        onStart: () => {
+            document.querySelector(modalSelector).style.display = 'flex';
+        }
     });
+
 }
 
 export function closeGalleryModal() {
     gsap.to("#side-modal-with-gallery", {
-        right: "-100%",
+        x: '100%',
         duration: 0.5,
-        ease: "power2.in"
+        ease: "power2.in",
+        onComplete: () => {
+            document.querySelector(modalSelector).style.display = 'none';
+        }
+
     });
 }
 

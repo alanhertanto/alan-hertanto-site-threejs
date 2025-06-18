@@ -37,32 +37,33 @@
 
 #side-modal {
   display: none;
-  position: absolute; /* or absolute as needed */
+  position: absolute;
+  /* or absolute as needed */
   top: 50%;
-  right:10%;
+  right: 10%;
   width: 300px;
   height: 300px;
   background: white;
-  transform: translateX(100%); /* Start offscreen */
-  transition: transform 0.3s ease; /* Optional fallback */
+  transform: translateX(100%);
+  /* Start offscreen */
+  transition: transform 0.3s ease;
+  /* Optional fallback */
 }
 
 /* Side modal styling */
 #side-modal-with-gallery {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 400px;
-  height: 100%;
-  background: #fff;
-  overflow-y: auto;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-  transition: right 0.5s ease;
-  z-index: 1000;
-}
-
-#side-modal-with-gallery.show {
-  right: 0;
+  display: none;
+  position: absolute;
+  /* or absolute as needed */
+  top: 50%;
+  right: 10%;
+  width: 300px;
+  height: 300px;
+  background: white;
+  transform: translateX(100%);
+  /* Start offscreen */
+  transition: transform 0.3s ease;
+  /* Optional fallback */
 }
 
 #gallery-grid {
@@ -81,10 +82,11 @@
 /* Popup styling */
 #popup {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -103,7 +105,8 @@
 
 #popup-close {
   position: absolute;
-  top: 20px; right: 40px;
+  top: 20px;
+  right: 40px;
   color: #fff;
   font-size: 40px;
   cursor: pointer;
