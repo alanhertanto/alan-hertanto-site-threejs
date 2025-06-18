@@ -17,10 +17,37 @@
       <div id="side-modal-content">
         <h2>Modal Title</h2>
         <p>Some content here...</p>
-        <button id="close-modal">Close</button>
       </div>
     </div>
-    
+
+
+    <!-- Slide-in side modal with gallery -->
+    <div id="side-modal-with-gallery">
+      <div id="side-modal-content">
+        <h2>Gallery</h2>
+        <div id="gallery-grid">
+          <!-- Cards will go here -->
+          <div class="gallery-card">
+            <img src="https://picsum.photos/200/150?random=1" alt="Image 1">
+          </div>
+          <div class="gallery-card">
+            <img src="https://picsum.photos/200/150?random=2" alt="Image 2">
+          </div>
+          <div class="gallery-card">
+            <img src="https://picsum.photos/200/150?random=3" alt="Image 3">
+          </div>
+          <!-- Add more as needed -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup for image -->
+    <div id="popup" class="hidden">
+      <span id="popup-close">&times;</span>
+      <img id="popup-img" src="" alt="Full view">
+    </div>
+
+
     <!-- Hidden buttons on top -->
     <div id="ui-buttons">
       <button id="btn1"></button>

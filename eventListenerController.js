@@ -1,21 +1,13 @@
 import * as THREE from 'three';
 import { getCameraControls } from './cameraController.js';
 import { getOutlinePass, getComposer } from './postProcessController.js';
-import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, closeSideModal } from './helper.js';
+import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, openGalleryModal } from './helper.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 export function addButtonListenerForCameraMovement(button, controls, camera) {
     button.addEventListener('click', () => {
-
-        // Register once — do NOT register this every click!
-        const closeBtn = document.getElementById('close-modal');
-        if (closeBtn && !closeBtn.dataset.listenerAdded) {
-            closeBtn.addEventListener('click', () => closeSideModal("#side-modal"));
-            closeBtn.dataset.listenerAdded = "true";
-        }
-
         focusCameraWithoutComplete(camera, controls, {
             target: new THREE.Vector3(0, 0, 0),
             position: new THREE.Vector3(5, 4, 5),
@@ -30,8 +22,6 @@ export function addButtonListenerForCameraMovement(button, controls, camera) {
 }
 
 export function initAllListener(camera, scene, clickableGroups, renderer) {
-
-
     window.addEventListener('click', (event) => {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -61,16 +51,28 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                     } else {
                         camPos = new THREE.Vector3().fromArray(config.position);
                     }
+                    if (group.children[0].name.includes("VR")) {
+                        focusCameraWithEvent(camera, controls,
+                            {
+                                position: camPos,
+                                target: config.controls_target,
+                                fov: config.fov,
+                                zoom: config.zoom,
+                                duration: 1.5
+                            }, openGalleryModal()
+                        );
+                    } else {
+                        focusCameraWithEvent(camera, controls,
+                            {
+                                position: camPos,
+                                target: config.controls_target,
+                                fov: config.fov,
+                                zoom: config.zoom,
+                                duration: 1.5
+                            }, openSideModal()
+                        );
 
-                    focusCameraWithEvent(camera, controls,
-                        {
-                            position: camPos,
-                            target: config.controls_target,
-                            fov: config.fov,
-                            zoom: config.zoom,
-                            duration: 1.5
-                        }
-                    );
+                    }
 
                     console.log('Clicking on:', group.name);
                 }
@@ -117,5 +119,29 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
         getComposer().setSize(width, height);
+    });
+
+
+
+
+    // Popup logic
+    const popup = document.getElementById("popup");
+    const popupImg = document.getElementById("popup-img");
+    const popupClose = document.getElementById("popup-close");
+
+    document.querySelectorAll(".gallery-card img").forEach(img => {
+        img.addEventListener("click", () => {
+            popupImg.src = img.src;
+            popup.classList.remove("hidden");
+        });
+    });
+
+    popupClose.addEventListener("click", () => {
+        popup.classList.add("hidden");
+    });
+    popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.classList.add("hidden");
+        }
     });
 }
