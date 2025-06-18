@@ -22,67 +22,28 @@ export function addButtonListenerForCameraMovement(button, controls, camera) {
 }
 
 export function initAllListener(camera, scene, clickableGroups, renderer) {
-    window.addEventListener('click', (event) => {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
 
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(clickableGroups, true);
+    // ✅ Helper: check if ANY modal is open
+    function isAnyModalOpen() {
+        const modals = [
+            document.getElementById('side-modal'),
+            document.getElementById('side-modal-with-gallery'),
+            document.getElementById('popup')
+        ];
+        return modals.some(modal =>
+            modal && modal.style.display !== 'none' && modal.style.display !== ''
+        );
+    }
 
-        if (intersects.length > 0) {
-            let group = intersects[0].object;
-            while (group && !group.userData.clickable) {
-                group = group.parent;
-            }
-
-            if (group && group.userData.clickable) {
-                const controls = getCameraControls();
-                const config = group.userData.cameraConfig;
-
-                if (config) {
-                    const controls = getCameraControls();
-
-                    // Compute new camera position from target + distance if needed
-                    let camPos;
-                    if (config.controls_target && config.controls_distance) {
-                        const target = new THREE.Vector3().fromArray(config.controls_target);
-                        const dir = new THREE.Vector3().fromArray(config.position).sub(target).normalize();
-                        camPos = target.clone().add(dir.multiplyScalar(config.controls_distance));
-                    } else {
-                        camPos = new THREE.Vector3().fromArray(config.position);
-                    }
-                    if (group.children[0].name.includes("VR")) {
-                        focusCameraWithEvent(camera, controls,
-                            {
-                                position: camPos,
-                                target: config.controls_target,
-                                fov: config.fov,
-                                zoom: config.zoom,
-                                duration: 1.5
-                            }, openGalleryModal()
-                        );
-                    } else {
-                        focusCameraWithEvent(camera, controls,
-                            {
-                                position: camPos,
-                                target: config.controls_target,
-                                fov: config.fov,
-                                zoom: config.zoom,
-                                duration: 1.5
-                            }, openSideModal()
-                        );
-
-                    }
-
-                    console.log('Clicking on:', group.name);
-                }
-            }
-        }
-    });
-
-
-
+    // ✅ Pointer move: outline hover
     window.addEventListener('pointermove', (event) => {
+        if (isAnyModalOpen()) {
+            getOutlinePass().selectedObjects = [];
+            return;
+        }
+
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -104,7 +65,61 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         }
     });
 
+    // ✅ Click: focus camera
+    window.addEventListener('click', (event) => {
+        if (isAnyModalOpen()) return;
 
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(clickableGroups, true);
+
+        if (intersects.length > 0) {
+            let group = intersects[0].object;
+            while (group && !group.userData.clickable) {
+                group = group.parent;
+            }
+
+            if (group && group.userData.clickable) {
+                const controls = getCameraControls();
+                const config = group.userData.cameraConfig;
+
+                if (config) {
+                    let camPos;
+                    if (config.controls_target && config.controls_distance) {
+                        const target = new THREE.Vector3().fromArray(config.controls_target);
+                        const dir = new THREE.Vector3().fromArray(config.position).sub(target).normalize();
+                        camPos = target.clone().add(dir.multiplyScalar(config.controls_distance));
+                    } else {
+                        camPos = new THREE.Vector3().fromArray(config.position);
+                    }
+
+                    if (group.children[0].name.includes("VR")) {
+                        focusCameraWithEvent(camera, controls, {
+                            position: camPos,
+                            target: config.controls_target,
+                            fov: config.fov,
+                            zoom: config.zoom,
+                            duration: 1.5
+                        }, openGalleryModal);
+                    } else {
+                        focusCameraWithEvent(camera, controls, {
+                            position: camPos,
+                            target: config.controls_target,
+                            fov: config.fov,
+                            zoom: config.zoom,
+                            duration: 1.5
+                        }, openSideModal);
+                    }
+
+                    console.log('Clicking on:', group.name);
+                }
+            }
+        }
+    });
+
+    // ✅ Exposure tweak
     window.exposure = 1.2;
     window.addEventListener('keydown', (e) => {
         if (e.key === '+') window.exposure += 0.1;
@@ -112,6 +127,8 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         renderer.toneMappingExposure = window.exposure;
         console.log('Exposure:', window.exposure.toFixed(2));
     });
+
+    // ✅ Resize
     window.addEventListener('resize', () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -121,10 +138,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         getComposer().setSize(width, height);
     });
 
-
-
-
-    // Popup logic
+    // ✅ Popup
     const popup = document.getElementById("popup");
     const popupImg = document.getElementById("popup-img");
     const popupClose = document.getElementById("popup-close");
@@ -145,3 +159,4 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         }
     });
 }
+
