@@ -39,15 +39,45 @@
   display: none;
   position: absolute;
   /* or absolute as needed */
-  top: 50%;
+  top: 30%;
   right: 10%;
-  width: 300px;
-  height: 300px;
+  width: 80vw;
+  max-width: 800px;
+  height: 70%;
+  max-height: 800px;
   background: white;
   transform: translateX(100%);
   /* Start offscreen */
   transition: transform 0.3s ease;
   /* Optional fallback */
+  border-radius: 25px;
+  border-color: #fff;
+  overflow-y: auto;
+}
+
+#side-modal-content{
+  width: 100%;
+  overflow: auto;
+  height: 100%;
+}
+
+#side-modal-label{
+  border-color: #3C3C43;
+  background-color: #3C3C43;
+  border-style: solid;
+  border-radius: 30px;
+  color: #fff;
+  width: 100px;
+  height: 20px;
+}
+
+#side-modal-img{
+  width: 100%;
+  height: 50%;
+  box-sizing: border-box;
+  border-radius: 25px 25px 0px 0px;
+  border-color: #3C3C43;
+  background-color: grey;
 }
 
 /* Side modal styling */
@@ -62,7 +92,7 @@
   background: white;
   transform: translateY(-50%) translateX(100%);
   transition: transform 0.3s ease;
-  box-shadow: -4px 0 10px rgba(0,0,0,0.2);
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -92,6 +122,7 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
+
 }
 
 #popup img {

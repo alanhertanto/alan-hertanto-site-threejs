@@ -67,6 +67,20 @@ export function instantiateObject(url, scene, clickableGroups) {
     });
 }
 
+export function setTheModal(fileName, config) {
+    loadClickableConfigs().then(clickableConfigs => {
+        const modalClass = `
+    p-4 
+    rounded 
+    shadow 
+    bg-${clickableConfigs.bgColor} 
+    border-${clickableConfigs.borderWidth} 
+    border-${clickableConfigs.borderColor} 
+    w-${clickableConfigs.width}
+  `;
+    });
+}
+
 // ✅ Util: atur world rotation
 export function setWorldRotation(object, xDeg, yDeg, zDeg) {
     const worldEuler = new THREE.Euler(
