@@ -79,6 +79,8 @@ export function setTheModal(fileName, config) {
     w-${clickableConfigs.width}
   `;
     });
+
+    document.createElement(modalClass);
 }
 
 // ✅ Util: atur world rotation
