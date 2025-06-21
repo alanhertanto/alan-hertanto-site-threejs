@@ -85,13 +85,27 @@ export function applyModalConfig(modalConfig) {
         const styleKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
         myModal.style[styleKey] = value;
     }
+    if(modalConfig.modalImages.length>1){
+        const container = document.querySelector('#side-modal-carousel-container');
+        while(container.children.length>1){
+            container.removeChild(container.lastChild);
+        }
+        modalConfig.modalImages.forEach(element => {
+            const img = document.createElement('img');
+            img.src = element.imageLocation;
+            document.querySelector('#side-modal-carousel-container').appendChild(img);
+        });
+
+    }
+
     // modalConfig.modalImages.forEach(element => {
     //     document.createElement('img');
     // });
     const thumbnailImages = document.getElementById('side-modal-img');
     thumbnailImages.src = modalConfig.modalThumbnails;
-    myModal.querySelector('h2').textContent = modalConfig.modalHeader;
-    myModal.querySelector('p').textContent = modalConfig.modalDescription;
+    document.querySelector('.side-modal-title').textContent = modalConfig.modalHeader;
+    document.querySelector('.side-modal-description').textContent = modalConfig.modalDescription;
+    document.querySelector('#side-modal-label').textContent = modalConfig.modalType;
 }
 
 
