@@ -1,3 +1,7 @@
+body{
+  display: block;
+  margin: 0px;
+}
 #ui-buttons {
   position: fixed;
   /* Stay in place on screen */
@@ -39,12 +43,6 @@
   display: none;
   position: absolute;
   /* or absolute as needed */
-  top: 30%;
-  right: 10%;
-  width: 80vw;
-  max-width: 800px;
-  height: 70%;
-  max-height: 800px;
   background: white;
   transform: translateX(100%);
   /* Start offscreen */

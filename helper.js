@@ -5,78 +5,104 @@ import gsap from 'gsap';
 
 
 // ✅ Fungsi memuat semua file di folder
-export function instaniateAllFilesFromFolder(scene, clickableGroups) {
+export function instaniateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs) {
     const files = import.meta.glob('./src/*.glb', { as: 'url' });
 
     for (const path in files) {
         files[path]().then(url => {
-            instantiateObject(url, scene, clickableGroups);
+            instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);
         });
     }
 }
 
-export async function loadClickableConfigs() {
-    const response = await fetch('allObjectsConfig.json');
-    const clickableConfigs = await response.json();
-    console.log(clickableConfigs); // ← now it's an array you can use
-    return clickableConfigs;
+export async function loadJSONConfig(path) {
+    const response = await fetch(path);
+    if (!response.ok) {
+        throw new Error(`Failed to load ${path}: ${response.status}`);
+    }
+    const json = await response.json();
+    console.log(`Loaded ${path}:`, json);
+    return json;
 }
+
 
 // ✅ Fungsi load 1 GLB & register parent group sebagai clickable
-export function instantiateObject(url, scene, clickableGroups) {
-    loadClickableConfigs().then(clickableConfigs => {
-        const filename = url.split('/').pop().split('.')[0];
+export async function instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs) {
+  
+    const filename = url.split('/').pop().split('.')[0];
 
-        const gradientMap = new THREE.TextureLoader().load(
-            'https://threejs.org/examples/textures/gradientMaps/threeTone.jpg'
-        );
-        gradientMap.minFilter = THREE.NearestFilter;
-        gradientMap.magFilter = THREE.NearestFilter;
+    const gradientMap = new THREE.TextureLoader().load(
+        'https://threejs.org/examples/textures/gradientMaps/threeTone.jpg'
+    );
+    gradientMap.minFilter = THREE.NearestFilter;
+    gradientMap.magFilter = THREE.NearestFilter;
 
-        const loader = new GLTFLoader();
-        loader.load(
-            url,
-            function (gltf) {
-                const parent = gltf.scene;
-                const root = gltf.scene.children[0];
+    const loader = new GLTFLoader();
+    loader.load(
+        url,
+        function (gltf) {
+            const parent = gltf.scene;
+            const root = gltf.scene.children[0];
 
-                const config = clickableConfigs.find(item => filename.includes(item.name));
-                if (config) {
-                    parent.userData.clickable = true;
-                    parent.userData.focusPosition = root.position.clone();
-                    parent.userData.cameraConfig = config.cameraConfig || null;
-                    parent.name = filename;
-                    clickableGroups.push(parent);
-                    console.log('Marking parent clickable with config:', filename);
-                }
-
-                parent.traverse(child => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
-                });
-
-                scene.add(parent);
-            },
-            undefined,
-            function (error) {
-                console.error(error);
+            const config = clickableConfigs.find(item => filename.includes(item.name));
+            if (config) {
+                parent.userData.clickable = true;
+                parent.userData.focusPosition = root.position.clone();
+                parent.userData.cameraConfig = config.cameraConfig || null;
+                parent.name = filename;
+                clickableGroups.push(parent);
+                console.log('Marking parent clickable with config:', filename);
             }
-        );
-    });
+
+            const modal = modalConfigs.find(item => filename.includes(item.name));
+
+            if (modal) {
+                parent.userData.modalConfig = modal.modalConfig || null;
+                parent.userData.modal = modal || null;
+            }
+
+            parent.traverse(child => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+
+            scene.add(parent);
+        },
+        undefined,
+        function (error) {
+            console.error(error);
+        }
+    );
+
 }
 
-export function setTheModal(fileName, config) {
-    loadClickableConfigs().then(clickableConfigs => {
+export function applyModalConfig(modalConfig) {
+    const myModal = document.getElementById('side-modal');
+    for (const [key, value] of Object.entries(modalConfig.modalConfig)) {
+        // Convert max-width → maxWidth
+        const styleKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+        myModal.style[styleKey] = value;
+    }
+    // modalConfig.modalImages.forEach(element => {
+    //     document.createElement('img');
+    // });
+    const thumbnailImages = document.getElementById('side-modal-img');
+    thumbnailImages.src = modalConfig.modalThumbnails;
+    myModal.querySelector('h2').textContent = modalConfig.modalHeader;
+    myModal.querySelector('p').textContent = modalConfig.modalDescription;
+}
+
+
+export function setTheModal() {
+    loadClickloadModalConfigsableConfigs().then(modalConfigs => {
         const modalClass = `
-    p-4 
-    rounded 
-    shadow 
-    bg-${clickableConfigs.bgColor} 
-    border-${clickableConfigs.borderWidth} 
-    border-${clickableConfigs.borderColor} 
-    w-${clickableConfigs.width}
+        
+    bg-${modalConfigs.bgColor} 
+    border-${modalConfigs.borderWidth} 
+    border-${modalConfigs.borderColor} 
+    w-${modalConfigs.width}
   `;
     });
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { getCameraControls } from './cameraController.js';
 import { getOutlinePass, getComposer } from './postProcessController.js';
-import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, openGalleryModal } from './helper.js';
+import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, openGalleryModal, applyModalConfig } from './helper.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -84,7 +84,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
             if (group && group.userData.clickable) {
                 const controls = getCameraControls();
                 const config = group.userData.cameraConfig;
-
+                const modal = group.userData.modal;
                 if (config) {
                     let camPos;
                     if (config.controls_target && config.controls_distance) {
@@ -111,6 +111,11 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                             zoom: config.zoom,
                             duration: 1.5
                         }, openSideModal);
+                    }
+                    if (modal) {
+                        console.log(modal);
+                        applyModalConfig(modal);
+
                     }
 
                     console.log('Clicking on:', group.name);

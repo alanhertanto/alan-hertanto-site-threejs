@@ -1,0 +1,76 @@
+[
+    {
+        "name": "Teleskop",
+        "modalHeader": "Under the Stars: Capturing Night’s Silent Stories",
+        "modalType": "hobby",
+        "modalDescription": "Through the lens, I find serenity under the vast night sky. Stargazing connects me to the universe, while photography lets me frame its fleeting beauty — moonlight illuminating the hills, constellations scattered like whispers, and city lights glowing beneath the cosmic canopy. Each photo is a pause in the timeless dance of night and light.",
+        "modalThumbnails": "./src/Images/Telescope/1.jpeg",
+        "modalImages": [
+            {
+                "imageTitle": "Hillside Lights Beneath the Night Sky",
+                "imageDescription": "A peaceful view of distant city lights shimmering beneath a partly clouded sky, framed by the calm darkness of surrounding hills. This shot balances nature and human presence, highlighting the gentle contrast between civilization and the vast, quiet night.",
+                "imageLocation": "./src/Images/Telescope/1.jpeg"
+            },
+            {
+                "imageTitle": "Moonbeam and Mountain Shadows",
+                "imageDescription": "A striking capture of the moon casting a strong beam across the sky, piercing through the darkness above a silhouetted mountain. Scattered stars dot the background, adding depth to this serene nocturnal scene.",
+                "imageLocation": "./src/Images/Telescope/2.jpeg"
+            },
+            {
+                "imageTitle": "Silent Peak Under the Moon",
+                "imageDescription": "The moon shines high above a calm mountain ridge, its soft glow bathing the forested landscape below. Subtle stars peek through the clear night, evoking a sense of stillness and quiet wonder.",
+                "imageLocation": "./src/Images/Telescope/3.jpeg"
+            },
+            {
+                "imageTitle": "Celestial Canopy",
+                "imageDescription": "A dreamy, wide-eyed look straight into the star-filled sky, with the moon’s beams streaking diagonally across the frame. Wispy clouds drift among the stars, creating a surreal mix of motion and calm — a perfect moment for stargazing dreams.",
+                "imageLocation": "./src/Images/Telescope/4.jpeg"
+            }
+        ],
+        "modalConfig": {
+            "top": "30%",
+            "right": "10%",
+            "width": "80vw",
+            "max-width": "800px",
+            "height": "70%",
+            "max-height": "800px"
+        }
+    },
+    {
+        "name": "VR",
+        "modalHeader": "Under the Stars: Capturing Night’s Silent Stories",
+        "modalType": "hobby",
+        "modalDescription": "Through the lens, I find serenity under the vast night sky. Stargazing connects me to the universe, while photography lets me frame its fleeting beauty — moonlight illuminating the hills, constellations scattered like whispers, and city lights glowing beneath the cosmic canopy. Each photo is a pause in the timeless dance of night and light.",
+        "modalThumbnails": "/Images/Telescope/1.jpeg",
+        "modalImages": [
+            {
+                "imageTitle": "Hillside Lights Beneath the Night Sky",
+                "imageDescription": "A peaceful view of distant city lights shimmering beneath a partly clouded sky, framed by the calm darkness of surrounding hills. This shot balances nature and human presence, highlighting the gentle contrast between civilization and the vast, quiet night.",
+                "imageLocation": "/Images/Telescope/1.jpeg"
+            },
+            {
+                "imageTitle": "Moonbeam and Mountain Shadows",
+                "imageDescription": "A striking capture of the moon casting a strong beam across the sky, piercing through the darkness above a silhouetted mountain. Scattered stars dot the background, adding depth to this serene nocturnal scene.",
+                "imageLocation": "/Images/Telescope/2.jpeg"
+            },
+            {
+                "imageTitle": "Silent Peak Under the Moon",
+                "imageDescription": "The moon shines high above a calm mountain ridge, its soft glow bathing the forested landscape below. Subtle stars peek through the clear night, evoking a sense of stillness and quiet wonder.",
+                "imageLocation": "/Images/Telescope/3.jpeg"
+            },
+            {
+                "imageTitle": "Celestial Canopy",
+                "imageDescription": "A dreamy, wide-eyed look straight into the star-filled sky, with the moon’s beams streaking diagonally across the frame. Wispy clouds drift among the stars, creating a surreal mix of motion and calm — a perfect moment for stargazing dreams.",
+                "imageLocation": "/Images/Telescope/4.jpeg"
+            }
+        ],
+        "modalConfig": {
+            "top": "30%",
+            "right": "10%",
+            "width": "80vw",
+            "max-width": "800px",
+            "height": "70%",
+            "max-height": "800px"
+        }
+    }
+]
