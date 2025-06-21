@@ -2,7 +2,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import gsap from 'gsap';
-
+import Swiper from './node_modules/swiper/swiper';
+import 'swiper/swiper-bundle.css';
 
 // ✅ Fungsi memuat semua file di folder
 export function instaniateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs) {
@@ -79,34 +80,58 @@ export async function instantiateObject(url, scene, clickableGroups, clickableCo
 }
 
 export function applyModalConfig(modalConfig) {
-    const myModal = document.getElementById('side-modal');
-    for (const [key, value] of Object.entries(modalConfig.modalConfig)) {
-        // Convert max-width → maxWidth
-        const styleKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
-        myModal.style[styleKey] = value;
-    }
-    if(modalConfig.modalImages.length>1){
-        const container = document.querySelector('#side-modal-carousel-container');
-        while(container.children.length>1){
-            container.removeChild(container.lastChild);
-        }
-        modalConfig.modalImages.forEach(element => {
-            const img = document.createElement('img');
-            img.src = element.imageLocation;
-            document.querySelector('#side-modal-carousel-container').appendChild(img);
-        });
+  const myModal = document.getElementById('side-modal');
 
-    }
+  // 1) Apply styles
+  for (const [key, value] of Object.entries(modalConfig.modalConfig)) {
+    const styleKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+    myModal.style[styleKey] = value;
+  }
 
-    // modalConfig.modalImages.forEach(element => {
-    //     document.createElement('img');
-    // });
-    const thumbnailImages = document.getElementById('side-modal-img');
-    thumbnailImages.src = modalConfig.modalThumbnails;
-    document.querySelector('.side-modal-title').textContent = modalConfig.modalHeader;
-    document.querySelector('.side-modal-description').textContent = modalConfig.modalDescription;
-    document.querySelector('#side-modal-label').textContent = modalConfig.modalType;
+  // 2) Fill the slider properly
+  if (modalConfig.modalImages.length > 1) {
+    const container = document.querySelector('.swiper-wrapper');
+
+    // ✅ Clear ALL slides
+    container.innerHTML = '';
+
+    // ✅ Add new slides
+    modalConfig.modalImages.forEach(element => {
+      const slide = document.createElement('div'); // important: must be a <div> for Swiper
+      slide.className = "swiper-slide";
+
+      const img = document.createElement('img');
+      img.src = element.imageLocation;
+      img.alt = element.imageTitle;
+
+      slide.appendChild(img);
+      container.appendChild(slide);
+    });
+  }
+
+  // 3) Static texts
+  document.querySelector('.side-modal-title').textContent = modalConfig.modalHeader;
+  document.querySelector('.side-modal-description').textContent = modalConfig.modalDescription;
+  document.querySelector('#side-modal-label').textContent = modalConfig.modalType;
+
+  // 4) Recreate Swiper cleanly
+  if (window.mySwiper) {
+    window.mySwiper.destroy(true, true);
+  }
+
+  window.mySwiper = new Swiper(".swiper-slider", {
+    loop: true,
+    slidesPerView: 1,
+    autoplay: { delay: 3000 },
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+    breakpoints: {
+      640: { slidesPerView: 1.25, spaceBetween: 20 },
+      1024: { slidesPerView: 2, spaceBetween: 20 }
+    }
+  });
 }
+
 
 
 export function setTheModal() {
