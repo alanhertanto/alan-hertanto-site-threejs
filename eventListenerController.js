@@ -96,7 +96,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                     } else {
                         camPos = new THREE.Vector3().fromArray(config.position);
                     }
-
+                    if(modal){
                     focusCameraWithEvent(camera, controls, {
                         position: camPos,
                         target: config.controls_target,
@@ -105,10 +105,11 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                         duration: 1.5
                     }, openSideModal);
 
-                    if (modal) {
                         console.log(modal);
                         applyModalConfig(modal);
 
+                    }else{
+                        focusObjectWithoutComplete(camera,group);
                     }
 
                     console.log('Clicking on:', group.name);
