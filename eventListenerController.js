@@ -109,7 +109,14 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                         applyModalConfig(modal);
 
                     }else{
-                        focusObjectWithoutComplete(camera,group);
+                        const params = {
+                        position: camPos,
+                        target: config.controls_target,
+                        fov: config.fov,
+                        zoom: config.zoom,
+                        duration: 1.5
+                    }
+                        focusObjectWithoutComplete(camera,controls, params, group);
                     }
 
                     console.log('Clicking on:', group.name);

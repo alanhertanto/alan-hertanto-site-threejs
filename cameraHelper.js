@@ -135,31 +135,26 @@ export function focusCameraWithoutComplete(camera, controls, params) {
     });
 }
 
-export function focusObjectWithoutComplete(camera, controls, params, gameObject, distance = 5) {
+export function focusObjectWithoutComplete(camera, controls, params, gameObject, distance = 0.001) {
+    // Save the camera's current and desired target/position
     const startTarget = controls.target.clone();
     const startPosCam = camera.position.clone();
 
-    const desiredTarget = params.target instanceof THREE.Vector3 ? params.target : new THREE.Vector3().fromArray(params.target);
-    const desiredPos = params.position instanceof THREE.Vector3 ? params.position : new THREE.Vector3().fromArray(params.position);
-    // 1) Get camera world position
-    const cameraPosition = new THREE.Vector3();
-    camera.getWorldPosition(cameraPosition);
+    const desiredTarget = params.target instanceof THREE.Vector3
+        ? params.target
+        : new THREE.Vector3().fromArray(params.target);
+    const desiredCamPos = params.position instanceof THREE.Vector3
+        ? params.position
+        : new THREE.Vector3().fromArray(params.position);
 
-    // 2) Get camera forward vector
-    const cameraDirection = new THREE.Vector3();
-    camera.getWorldDirection(cameraDirection); // this is normalized
+    // We'll use desiredCamPos, not getWorldPosition() anymore
+    const cameraDirection = new THREE.Vector3().subVectors(desiredTarget, desiredCamPos).normalize();
+    const desiredObjPos = desiredCamPos.clone().add(cameraDirection.multiplyScalar(distance));
 
-    // 3) Desired position = camera position + forward * distance
-    const desiredPosition = cameraPosition.clone().add(cameraDirection.multiplyScalar(distance));
-
-    // 4) Animate object to this position
-    const startPos = gameObject.position.clone();
-
-    const tweenObj = {
-        x: startPos.x,
-        y: startPos.y,
-        z: startPos.z
-    };
+    const startObjPos = gameObject.position.clone();
+    const worldPos = new THREE.Vector3();
+    gameObject.getWorldPosition(worldPos);
+    console.log(`Previous GameObject Position is ${worldPos.toArray()}`);
     const tweenObjCam = {
         camX: startPosCam.x,
         camY: startPosCam.y,
@@ -170,45 +165,54 @@ export function focusObjectWithoutComplete(camera, controls, params, gameObject,
         fov: camera.fov,
         zoom: camera.zoom
     };
+    const tweenObj = {
+        x: startObjPos.x,
+        y: startObjPos.y,
+        z: startObjPos.z
+    };
 
+    // 1) Tween the camera
     gsap.to(tweenObjCam, {
-        camX: desiredPos.x,
-        camY: desiredPos.y,
-        camZ: desiredPos.z,
+        camX: desiredCamPos.x,
+        camY: desiredCamPos.y,
+        camZ: desiredCamPos.z,
         tgtX: desiredTarget.x,
         tgtY: desiredTarget.y,
         tgtZ: desiredTarget.z,
-        fov: params.fov !== undefined ? params.fov : camera.fov,
-        zoom: params.zoom !== undefined ? params.zoom : camera.zoom,
+        fov: params.fov ?? camera.fov,
+        zoom: params.zoom ?? camera.zoom,
         duration: params.duration || 1.5,
         ease: 'power2.inOut',
         onUpdate: () => {
-            camera.position.set(tweenObj.camX, tweenObj.camY, tweenObj.camZ);
-            camera.fov = tweenObj.fov;
-            camera.zoom = tweenObj.zoom;
+            camera.position.set(tweenObjCam.camX, tweenObjCam.camY, tweenObjCam.camZ);
+            camera.fov = tweenObjCam.fov;
+            camera.zoom = tweenObjCam.zoom;
             camera.updateProjectionMatrix();
 
-            controls.target.set(tweenObj.tgtX, tweenObj.tgtY, tweenObj.tgtZ);
+            controls.target.set(tweenObjCam.tgtX, tweenObjCam.tgtY, tweenObjCam.tgtZ);
             controls.update();
-        }, onComplete: () => {
-            gsap.to(tweenObj, {
-                x: desiredPosition.x,
-                y: desiredPosition.y,
-                z: desiredPosition.z,
-                duration: 1.5,
-                ease: 'power2.inOut',
-                onUpdate: () => {
-                    gameObject.position.set(tweenObj.x, tweenObj.y, tweenObj.z);
-                    gameObject.lookAt(camera.position);
-                },
-                onComplete: () => {
-                    console.log(`Object now in front of camera at: ${gameObject.position.toArray()}`);
-                }
-            });
+        },
+        onComplete: () => {
+            // // 2) Then tween the object to in front of the final camera
+            // gsap.to(tweenObj, {
+            //     x: desiredObjPos.x,
+            //     y: desiredObjPos.y,
+            //     z: desiredObjPos.z,
+            //     duration: 1.5,
+            //     ease: 'power2.inOut',
+            //     onUpdate: () => {
+            //         // gameObject.position.set(tweenObj.x, tweenObj.y, tweenObj.z);
+            //         gameObject.children[0].lookAt(camera.position); // not camera.position because it's moving
+            //     },
+            //     onComplete: () => {
+            //         console.log("Camera focused on object, object now in front of final camera.");
+            //         console.log("✅ Camera position: ", camera.position.toArray());
+            //         console.log("✅ Camera target: ", controls.target.toArray());
+            //         console.log("✅ Object now in front of final camera: ", gameObject.position.toArray());
+            //     }
+            // });
+            // 
         }
     });
-
-
-
-
 }
+
