@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 
 const isDebugMode = false; // Set to false in production
+
+export function getDebugModeState(){
+    return isDebugMode;
+}
 export function initDebugControls(scene) {
     if (isDebugMode) {
         const axesHelper = new THREE.AxesHelper(5);

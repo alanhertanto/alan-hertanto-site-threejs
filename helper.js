@@ -1,6 +1,7 @@
 // helper.js
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { getDebugModeState } from './debugController';
 import gsap from 'gsap';
 import Swiper from './node_modules/swiper/swiper';
 import 'swiper/swiper-bundle.css';
@@ -10,9 +11,19 @@ export function instaniateAllFilesFromFolder(scene, clickableGroups, clickableCo
     const files = import.meta.glob('./src/*.glb', { as: 'url' });
 
     for (const path in files) {
-        files[path]().then(url => {
-            instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);
-        });
+        
+        if(getDebugModeState()){
+            files[path]().then(url => {
+                instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);
+            });
+        }else{
+            if(path.includes("Teleskop")){
+                files[path]().then(url => {
+                    instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);
+                });
+            }
+        }
+       
     }
 }
 
@@ -79,7 +90,8 @@ export async function instantiateObject(url, scene, clickableGroups, clickableCo
 
 }
 
-export function applyModalConfig(modalConfig) {
+
+export async function applyModalConfig(modalConfig) {
   const myModal = document.getElementById('side-modal');
 
   // 1) Apply styles
@@ -89,26 +101,19 @@ export function applyModalConfig(modalConfig) {
   }
 
   // 2) Fill the slider properly
-  if (modalConfig.modalImages.length > 1) {
-    const container = document.querySelector('.swiper-wrapper');
-
-    // ✅ Clear ALL slides
-    container.innerHTML = '';
-
-    // ✅ Add new slides
-    modalConfig.modalImages.forEach(element => {
-      const slide = document.createElement('div'); // important: must be a <div> for Swiper
-      slide.className = "swiper-slide";
-
-      const img = document.createElement('img');
-      img.src = element.imageLocation;
-      img.alt = element.imageTitle;
-
-      slide.appendChild(img);
-      container.appendChild(slide);
-    });
-  }
-
+   if(modalConfig.modalImages.length>1){
+        const container = document.querySelector('#side-modal-carousel-container');
+        while(container.children.length>1){
+            container.removeChild(container.lastChild);
+        }
+        modalConfig.modalImages.forEach(element => {
+            const divImg = document.createElement('div');
+            const img = document.createElement('img');
+            img.src = element.imageLocation;
+            
+            document.querySelector('#side-modal-carousel-container').appendChild(img);
+        });
+    }
   // 3) Static texts
   document.querySelector('.side-modal-title').textContent = modalConfig.modalHeader;
   document.querySelector('.side-modal-description').textContent = modalConfig.modalDescription;
@@ -132,7 +137,23 @@ export function applyModalConfig(modalConfig) {
   });
 }
 
+export function testSwiper(){
+    if (window.mySwiper) {
+    window.mySwiper.destroy(true, true);
+  }
 
+  window.mySwiper = new Swiper(".swiper-slider", {
+    loop: true,
+    slidesPerView: 1,
+    autoplay: { delay: 3000 },
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+    breakpoints: {
+      640: { slidesPerView: 1.25, spaceBetween: 20 },
+      1024: { slidesPerView: 2, spaceBetween: 20 }
+    }
+  });
+}
 
 export function setTheModal() {
     loadClickloadModalConfigsableConfigs().then(modalConfigs => {

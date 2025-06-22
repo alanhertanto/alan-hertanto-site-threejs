@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { getCameraControls } from './cameraController.js';
 import { getOutlinePass, getComposer } from './postProcessController.js';
-import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, openGalleryModal, applyModalConfig } from './helper.js';
+import { focusCameraWithEvent, focusCameraWithoutComplete, openSideModal, openGalleryModal, applyModalConfig, testSwiper } from './helper.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -129,6 +129,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
     window.addEventListener('keydown', (e) => {
         if (e.key === '+') window.exposure += 0.1;
         if (e.key === '-') window.exposure -= 0.1;
+        if (e.key === '.') testSwiper();
         renderer.toneMappingExposure = window.exposure;
         console.log('Exposure:', window.exposure.toFixed(2));
     });
