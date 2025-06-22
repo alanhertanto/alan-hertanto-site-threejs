@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { instaniateAllFilesFromFolder, loadJSONConfig } from './helper.js';
+import { instantiateAllFilesFromFolder, loadJSONConfig } from './helper.js';
 import { initLighting } from './lightingController.js';
 import { getCameraControls, initCameraControls } from './cameraController.js';
 import { getComposer, initProcessing } from './postProcessController.js';
@@ -28,7 +28,7 @@ const modalConfigs = await loadJSONConfig('allObjectsModalConfig.json');
 
 initProcessing(getRendererControls(), scene, camera);
 let clickableGroups = [];
-instaniateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs);
+instantiateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs);
 const lastCameraState = createCameraState(camera, getCameraControls());
 
 initDebugControls(scene);

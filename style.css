@@ -102,38 +102,6 @@ body {
   object-fit: cover;
   border-radius: 1vw;
 }
-
-
-/* Side modal styling */
-#side-modal-with-gallery {
-  display: none;
-  position: fixed;
-  top: 50%;
-  right: 20%;
-  width: 80vw;
-  max-width: 800px;
-  height: auto;
-  background: white;
-  transform: translateY(-50%) translateX(100%);
-  transition: transform 0.3s ease;
-  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-#gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.gallery-card img {
-  width: 100%;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
 /* Popup styling */
 #popup {
   position: fixed;
