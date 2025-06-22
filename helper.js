@@ -3,27 +3,30 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { getDebugModeState } from './debugController';
 import gsap from 'gsap';
-import Swiper from './node_modules/swiper/swiper';
-import 'swiper/swiper-bundle.css';
+import Swiper from 'swiper/bundle';
+
+// import styles bundle
+import 'swiper/css/bundle';
+
 
 // ✅ Fungsi memuat semua file di folder
 export function instaniateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs) {
     const files = import.meta.glob('./src/*.glb', { as: 'url' });
 
     for (const path in files) {
-        
-        if(getDebugModeState()){
+
+        if (getDebugModeState()) {
             files[path]().then(url => {
                 instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);
             });
-        }else{
-            if(path.includes("Teleskop")){
+        } else {
+            if (path.includes("Teleskop")) {
                 files[path]().then(url => {
                     instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);
                 });
             }
         }
-       
+
     }
 }
 
@@ -40,7 +43,7 @@ export async function loadJSONConfig(path) {
 
 // ✅ Fungsi load 1 GLB & register parent group sebagai clickable
 export async function instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs) {
-  
+
     const filename = url.split('/').pop().split('.')[0];
 
     const gradientMap = new THREE.TextureLoader().load(
@@ -92,67 +95,83 @@ export async function instantiateObject(url, scene, clickableGroups, clickableCo
 
 
 export async function applyModalConfig(modalConfig) {
-  const myModal = document.getElementById('side-modal');
+    const popupImg = document.getElementById("popup-img");
+    const myModal = document.getElementById('side-modal');
 
-  // 1) Apply styles
-  for (const [key, value] of Object.entries(modalConfig.modalConfig)) {
-    const styleKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
-    myModal.style[styleKey] = value;
-  }
+    // 1) Apply styles
+    for (const [key, value] of Object.entries(modalConfig.modalConfig)) {
+        const styleKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+        myModal.style[styleKey] = value;
+    }
 
-  // 2) Fill the slider properly
-   if(modalConfig.modalImages.length>1){
-        const container = document.querySelector('#side-modal-carousel-container');
-        while(container.children.length>1){
+    // 2) Fill the slider properly
+    if (modalConfig.modalImages.length > 1) {
+        const container = document.querySelector('.swiper-wrapper');
+        while (container.children.length > 1) {
             container.removeChild(container.lastChild);
         }
         modalConfig.modalImages.forEach(element => {
             const divImg = document.createElement('div');
+            divImg.className = "swiper-slide";
             const img = document.createElement('img');
             img.src = element.imageLocation;
-            
-            document.querySelector('#side-modal-carousel-container').appendChild(img);
+            img.alt = element.imageTitle;
+            img.className = "side-modal-image";
+
+            img.addEventListener("click", () => {
+                popupImg.src = img.src;
+                popup.classList.remove("hidden");
+            });
+
+
+
+            divImg.appendChild(img);
+            document.querySelector('.swiper-wrapper').appendChild(divImg);
         });
     }
-  // 3) Static texts
-  document.querySelector('.side-modal-title').textContent = modalConfig.modalHeader;
-  document.querySelector('.side-modal-description').textContent = modalConfig.modalDescription;
-  document.querySelector('#side-modal-label').textContent = modalConfig.modalType;
+    // 3) Static texts
+    document.querySelector('.side-modal-title').textContent = modalConfig.modalHeader;
+    document.querySelector('.side-modal-description').textContent = modalConfig.modalDescription;
 
-  // 4) Recreate Swiper cleanly
-  if (window.mySwiper) {
-    window.mySwiper.destroy(true, true);
-  }
-
-  window.mySwiper = new Swiper(".swiper-slider", {
-    loop: true,
-    slidesPerView: 1,
-    autoplay: { delay: 3000 },
-    pagination: { el: ".swiper-pagination", clickable: true },
-    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-    breakpoints: {
-      640: { slidesPerView: 1.25, spaceBetween: 20 },
-      1024: { slidesPerView: 2, spaceBetween: 20 }
+    // 4) Recreate Swiper cleanly
+    if (window.mySwiper) {
+        window.mySwiper.destroy(true, true);
     }
-  });
+
+    window.mySwiper = new Swiper(".mySwiper", {
+        loop: true,
+        slidesPerView: 1,
+        autoplay: { delay: 7500 },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+    });
+    window.mySwiper.on('slideChange', function () {
+        modalConfig.modalImages.forEach((image, index) => {
+            console.log(`Slide changed to index: ${index}`);
+            console.log(`title: ${image.imageTitle}`);
+            if (index === window.mySwiper.realIndex) {
+                document.querySelector('.side-modal-image-title').textContent = image.imageTitle;
+                document.querySelector('.side-modal-image-description').textContent = image.imageDescription;
+            }
+        });
+    });
 }
 
-export function testSwiper(){
+export function testSwiper() {
     if (window.mySwiper) {
-    window.mySwiper.destroy(true, true);
-  }
-
-  window.mySwiper = new Swiper(".swiper-slider", {
-    loop: true,
-    slidesPerView: 1,
-    autoplay: { delay: 3000 },
-    pagination: { el: ".swiper-pagination", clickable: true },
-    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-    breakpoints: {
-      640: { slidesPerView: 1.25, spaceBetween: 20 },
-      1024: { slidesPerView: 2, spaceBetween: 20 }
+        window.mySwiper.destroy(true, true);
     }
-  });
+
+    window.mySwiper = new Swiper(".mySwiper", {
+        loop: true,
+        slidesPerView: 1,
+        autoplay: { delay: 7500 },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        breakpoints: {
+            640: { slidesPerView: 1.25, spaceBetween: 20 },
+            1024: { slidesPerView: 2, spaceBetween: 20 }
+        }
+    });
 }
 
 export function setTheModal() {
