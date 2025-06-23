@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { closeSideModal } from './modalHelper.js';
 import { gsap } from 'gsap';
+import { openFlipBook } from './flipBookVanilla.js';
 
 export function focusCamera(camera, controls, params) {
     const startTarget = controls.target.clone();
@@ -193,25 +194,11 @@ export function focusObjectWithoutComplete(camera, controls, params, gameObject,
             controls.update();
         },
         onComplete: () => {
-            // // 2) Then tween the object to in front of the final camera
-            // gsap.to(tweenObj, {
-            //     x: desiredObjPos.x,
-            //     y: desiredObjPos.y,
-            //     z: desiredObjPos.z,
-            //     duration: 1.5,
-            //     ease: 'power2.inOut',
-            //     onUpdate: () => {
-            //         // gameObject.position.set(tweenObj.x, tweenObj.y, tweenObj.z);
-            //         gameObject.children[0].lookAt(camera.position); // not camera.position because it's moving
-            //     },
-            //     onComplete: () => {
-            //         console.log("Camera focused on object, object now in front of final camera.");
-            //         console.log("✅ Camera position: ", camera.position.toArray());
-            //         console.log("✅ Camera target: ", controls.target.toArray());
-            //         console.log("✅ Object now in front of final camera: ", gameObject.position.toArray());
-            //     }
-            // });
-            // 
+            if (gameObject.name == "Resume") {
+                // Show popup
+                document.getElementById('popup-book').display = 'flex';
+                openFlipBook();
+            }
         }
     });
 }

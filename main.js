@@ -8,6 +8,8 @@ import { initRendererControls, getRendererControls } from './rendererController.
 import { initAllListener, addButtonListenerForCameraMovement } from './eventListenerController.js';
 import { initDebugControls, checkCameraChanges, createCameraState } from './debugController.js';
 
+
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
 
@@ -36,6 +38,9 @@ initAllListener(camera, getCameraControls(), clickableGroups, getRendererControl
 //testing the button later be refactored.
 const button1 = document.getElementById('btn1');
 addButtonListenerForCameraMovement(button1, getCameraControls(), camera);
+
+
+
 // === 11. Animation Loop ===
 function animate() {
     requestAnimationFrame(animate);

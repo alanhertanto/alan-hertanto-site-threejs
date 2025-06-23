@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { getCameraControls } from './cameraController.js';
 import { getOutlinePass, getComposer } from './postProcessController.js';
 import { } from './helper.js';
-import { focusCameraWithEvent, focusCameraWithoutComplete,focusObjectWithoutComplete } from './cameraHelper.js';
-import { openSideModal, applyModalConfig, openGalleryModal } from './modalHelper.js';
+import { focusCameraWithEvent, focusCameraWithoutComplete, focusObjectWithoutComplete } from './cameraHelper.js';
+import { openSideModal, applyModalConfig } from './modalHelper.js';
+import {  closeFlipBook } from './flipBookVanilla.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -32,7 +33,8 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         const modals = [
             document.getElementById('side-modal'),
             document.getElementById('side-modal-with-gallery'),
-            document.getElementById('popup')
+            document.getElementById('popup'),
+            document.getElementById('popup-book')
         ];
         return modals.some(modal =>
             modal && modal.style.display !== 'none' && modal.style.display !== ''
@@ -96,27 +98,27 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                     } else {
                         camPos = new THREE.Vector3().fromArray(config.position);
                     }
-                    if(modal){
-                    focusCameraWithEvent(camera, controls, {
-                        position: camPos,
-                        target: config.controls_target,
-                        fov: config.fov,
-                        zoom: config.zoom,
-                        duration: 1.5
-                    }, openSideModal);
+                    if (modal) {
+                        focusCameraWithEvent(camera, controls, {
+                            position: camPos,
+                            target: config.controls_target,
+                            fov: config.fov,
+                            zoom: config.zoom,
+                            duration: 1.5
+                        }, openSideModal);
 
                         console.log(modal);
                         applyModalConfig(modal);
 
-                    }else{
+                    } else {
                         const params = {
-                        position: camPos,
-                        target: config.controls_target,
-                        fov: config.fov,
-                        zoom: config.zoom,
-                        duration: 1.5
-                    }
-                        focusObjectWithoutComplete(camera,controls, params, group);
+                            position: camPos,
+                            target: config.controls_target,
+                            fov: config.fov,
+                            zoom: config.zoom,
+                            duration: 1.5
+                        }
+                        focusObjectWithoutComplete(camera, controls, params, group);
                     }
 
                     console.log('Clicking on:', group.name);
@@ -125,12 +127,14 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         }
     });
 
+    
+
     // ✅ Exposure tweak
     window.exposure = 1.2;
     window.addEventListener('keydown', (e) => {
         if (e.key === '+') window.exposure += 0.1;
         if (e.key === '-') window.exposure -= 0.1;
-        if (e.key=== '.') focusObjectWithoutComplete(camera, scene.getObjectByName('VR'));
+        if (e.key === '.') focusObjectWithoutComplete(camera, scene.getObjectByName('VR'));
         renderer.toneMappingExposure = window.exposure;
         console.log('Exposure:', window.exposure.toFixed(2));
     });
@@ -164,5 +168,21 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         if (e.target === popup) {
             popup.classList.add("hidden");
         }
+    });
+
+    const popupbook = document.getElementById("popup-book");
+    const popupbookclose = document.getElementById("popup-book-close");
+
+    popupbookclose.addEventListener("click", () => {
+        const controls = getCameraControls();
+        popupbook.style.display = 'none';
+        focusCameraWithoutComplete(camera, controls, {
+            target: new THREE.Vector3(0, 0, 0),
+            position: new THREE.Vector3(5, 4, 5),
+            fov: 75,
+            zoom: 1,
+            duration: 1.5
+        });
+        closeFlipBook();
     });
 }

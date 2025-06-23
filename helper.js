@@ -2,7 +2,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { getDebugModeState } from './debugController';
-
 // ✅ Fungsi memuat semua file di folder
 export function instantiateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs) {
     const files = import.meta.glob('./src/*.glb', { as: 'url' });
