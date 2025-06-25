@@ -4,7 +4,7 @@ import { getOutlinePass, getComposer } from './postProcessController.js';
 import { } from './helper.js';
 import { focusCameraWithEvent, focusCameraWithoutComplete, focusObjectWithoutComplete } from './cameraHelper.js';
 import { openSideModal, applyModalConfig } from './modalHelper.js';
-import {  closeFlipBook } from './flipBookVanilla.js';
+import { closeFlipBook } from './flipBookVanilla.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -45,7 +45,15 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
     window.addEventListener('pointermove', (event) => {
         if (isAnyModalOpen()) {
             getOutlinePass().selectedObjects = [];
+            getCameraControls().enablePan = false;
+            getCameraControls().enableRotate = false;
+            getCameraControls().enableZoom = false;
             return;
+        } else {
+            getCameraControls().enablePan = true;
+            getCameraControls().enableRotate = true;
+            getCameraControls().enableZoom = true;
+
         }
 
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -86,6 +94,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
             }
 
             if (group && group.userData.clickable) {
+                group.userData.clickable = false;
                 const controls = getCameraControls();
                 const config = group.userData.cameraConfig;
                 const modal = group.userData.modal;
@@ -105,7 +114,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
                             fov: config.fov,
                             zoom: config.zoom,
                             duration: 1.5
-                        }, openSideModal);
+                        }, openSideModal, group);
 
                         console.log(modal);
                         applyModalConfig(modal);
@@ -127,7 +136,7 @@ export function initAllListener(camera, scene, clickableGroups, renderer) {
         }
     });
 
-    
+
 
     // ✅ Exposure tweak
     window.exposure = 1.2;

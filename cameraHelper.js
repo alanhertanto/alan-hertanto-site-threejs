@@ -3,7 +3,7 @@ import { closeSideModal } from './modalHelper.js';
 import { gsap } from 'gsap';
 import { openFlipBook } from './flipBookVanilla.js';
 
-export function focusCamera(camera, controls, params) {
+export function focusCameraWithEvent(camera, controls, params, customEvent, gameObject) {
     const startTarget = controls.target.clone();
     const startPos = camera.position.clone();
 
@@ -32,49 +32,11 @@ export function focusCamera(camera, controls, params) {
         zoom: params.zoom !== undefined ? params.zoom : camera.zoom,
         duration: params.duration || 1.5,
         ease: 'power2.inOut',
-        onUpdate: () => {
-            camera.position.set(tweenObj.camX, tweenObj.camY, tweenObj.camZ);
-            camera.fov = tweenObj.fov;
-            camera.zoom = tweenObj.zoom;
-            camera.updateProjectionMatrix();
-
-            controls.target.set(tweenObj.tgtX, tweenObj.tgtY, tweenObj.tgtZ);
-            controls.update();
-        }, onComplete: () => {
-            document.getElementById('ui-buttons').style.display = 'flex';
-
-        }
-    });
-}
-export function focusCameraWithEvent(camera, controls, params, customEvent) {
-    const startTarget = controls.target.clone();
-    const startPos = camera.position.clone();
-
-    const desiredTarget = params.target instanceof THREE.Vector3 ? params.target : new THREE.Vector3().fromArray(params.target);
-    const desiredPos = params.position instanceof THREE.Vector3 ? params.position : new THREE.Vector3().fromArray(params.position);
-
-    const tweenObj = {
-        camX: startPos.x,
-        camY: startPos.y,
-        camZ: startPos.z,
-        tgtX: startTarget.x,
-        tgtY: startTarget.y,
-        tgtZ: startTarget.z,
-        fov: camera.fov,
-        zoom: camera.zoom
-    };
-
-    gsap.to(tweenObj, {
-        camX: desiredPos.x,
-        camY: desiredPos.y,
-        camZ: desiredPos.z,
-        tgtX: desiredTarget.x,
-        tgtY: desiredTarget.y,
-        tgtZ: desiredTarget.z,
-        fov: params.fov !== undefined ? params.fov : camera.fov,
-        zoom: params.zoom !== undefined ? params.zoom : camera.zoom,
-        duration: params.duration || 1.5,
-        ease: 'power2.inOut',
+        onStart: () => {
+            controls.enableRotate = false;
+            controls.enableZoom = false;
+            controls.enablePan = false;
+        },
         onUpdate: () => {
             camera.position.set(tweenObj.camX, tweenObj.camY, tweenObj.camZ);
             camera.fov = tweenObj.fov;
@@ -88,6 +50,10 @@ export function focusCameraWithEvent(camera, controls, params, customEvent) {
             if (customEvent && typeof customEvent === 'function') {
                 customEvent();
             }
+            gameObject.userData.clickable = true; // Reset clickable state
+            controls.enableRotate = true;
+            controls.enableZoom = true;
+            controls.enablePan = true;
 
         }
     });
@@ -122,6 +88,13 @@ export function focusCameraWithoutComplete(camera, controls, params) {
         zoom: params.zoom !== undefined ? params.zoom : camera.zoom,
         duration: params.duration || 1.5,
         ease: 'power2.inOut',
+        onStart: () => {
+            closeSideModal();
+            controls.enableRotate = false;
+            controls.enableZoom = false;
+            controls.enablePan = false;
+
+        },
         onUpdate: () => {
             camera.position.set(tweenObj.camX, tweenObj.camY, tweenObj.camZ);
             camera.fov = tweenObj.fov;
@@ -131,7 +104,9 @@ export function focusCameraWithoutComplete(camera, controls, params) {
             controls.target.set(tweenObj.tgtX, tweenObj.tgtY, tweenObj.tgtZ);
             controls.update();
         }, onComplete: () => {
-            closeSideModal();
+            controls.enableRotate = true;
+            controls.enableZoom = true;
+            controls.enablePan = true;
         }
     });
 }
@@ -184,6 +159,11 @@ export function focusObjectWithoutComplete(camera, controls, params, gameObject,
         zoom: params.zoom ?? camera.zoom,
         duration: params.duration || 1.5,
         ease: 'power2.inOut',
+        onStart: () => {
+            controls.enableRotate = false;
+            controls.enableZoom = false;
+            controls.enablePan = false;
+        },
         onUpdate: () => {
             camera.position.set(tweenObjCam.camX, tweenObjCam.camY, tweenObjCam.camZ);
             camera.fov = tweenObjCam.fov;
@@ -199,6 +179,11 @@ export function focusObjectWithoutComplete(camera, controls, params, gameObject,
                 document.getElementById('popup-book').display = 'flex';
                 openFlipBook();
             }
+            gameObject.userData.clickable = true; // Reset clickable state
+            controls.enableRotate = true;
+            controls.enableZoom = true;
+            controls.enablePan = true;
+
         }
     });
 }
