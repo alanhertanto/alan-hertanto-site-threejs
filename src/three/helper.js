@@ -3,12 +3,15 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { getDebugModeState } from './debugController';
 // ✅ Fungsi memuat semua file di folder
+
+const lightweightMode = false;
+
 export function instantiateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs) {
     const files = import.meta.glob('../models/*.glb', { as: 'url' });
 
     for (const path in files) {
 
-        if (!getDebugModeState()) {
+        if (lightweightMode) {
             files[path]().then(url => {
                 console.log("Starting To Spawning Object!");
                 instantiateObject(url, scene, clickableGroups, clickableConfigs, modalConfigs);

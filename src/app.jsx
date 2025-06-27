@@ -8,6 +8,7 @@ import { getComposer, initProcessing } from './three/postProcessController.js';
 import { initRendererControls, getRendererControls } from './three/rendererController.js';
 import { initAllListener, addButtonListenerForCameraMovement } from './three/eventListenerController.js';
 import { initDebugControls, checkCameraChanges, createCameraState } from './three/debugController.js';
+import Appheader from './appheader.jsx';
 
 export default function App() {
     useEffect(()=>{
@@ -46,6 +47,7 @@ export default function App() {
     });
     return(
         <>
+        <Appheader></Appheader>
             <canvas id="webgl-canvas"></canvas>    
         </>
     )
