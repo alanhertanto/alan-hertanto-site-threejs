@@ -8,8 +8,6 @@ import { initRendererControls, getRendererControls } from './rendererController.
 import { initAllListener, addButtonListenerForCameraMovement } from './eventListenerController.js';
 import { initDebugControls, checkCameraChanges, createCameraState } from './debugController.js';
 
-
-
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
 
@@ -27,7 +25,6 @@ initLighting(scene);
 const clickableConfigs = await loadJSONConfig('allObjectsConfig.json');
 const modalConfigs = await loadJSONConfig('allObjectsModalConfig.json');
 
-
 initProcessing(getRendererControls(), scene, camera);
 let clickableGroups = [];
 instantiateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs);
@@ -38,8 +35,6 @@ initAllListener(camera, getCameraControls(), clickableGroups, getRendererControl
 //testing the button later be refactored.
 const button1 = document.getElementById('btn1');
 addButtonListenerForCameraMovement(button1, getCameraControls(), camera);
-
-
 
 // === 11. Animation Loop ===
 function animate() {

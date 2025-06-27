@@ -3,6 +3,31 @@ import { closeSideModal } from './modalHelper.js';
 import { gsap } from 'gsap';
 import { openFlipBook } from './flipBookVanilla.js';
 
+const blocker = document.createElement('div');
+blocker.id = 'control-blocker';
+blocker.style.position = 'fixed';
+blocker.style.top = 0;
+blocker.style.left = 0;
+blocker.style.width = '100%';
+blocker.style.height = '100%';
+blocker.style.zIndex = 9999;
+blocker.style.cursor = 'wait';
+blocker.style.pointerEvents = 'auto'; // Ensures it captures events
+
+export function createControlBlocker() {
+    if (!document.body.contains(blocker)) {
+        document.body.appendChild(blocker);
+    }
+}
+
+export function removeControlBlocker() {
+    if (document.body.contains(blocker)) {
+        document.body.removeChild(blocker);
+    }
+}
+
+
+
 export function focusCameraWithEvent(camera, controls, params, customEvent, gameObject) {
     const startTarget = controls.target.clone();
     const startPos = camera.position.clone();
@@ -33,9 +58,7 @@ export function focusCameraWithEvent(camera, controls, params, customEvent, game
         duration: params.duration || 1.5,
         ease: 'power2.inOut',
         onStart: () => {
-            controls.enableRotate = false;
-            controls.enableZoom = false;
-            controls.enablePan = false;
+           createControlBlocker();
         },
         onUpdate: () => {
             camera.position.set(tweenObj.camX, tweenObj.camY, tweenObj.camZ);
@@ -51,9 +74,7 @@ export function focusCameraWithEvent(camera, controls, params, customEvent, game
                 customEvent();
             }
             gameObject.userData.clickable = true; // Reset clickable state
-            controls.enableRotate = true;
-            controls.enableZoom = true;
-            controls.enablePan = true;
+            removeControlBlocker();
 
         }
     });
@@ -90,9 +111,7 @@ export function focusCameraWithoutComplete(camera, controls, params) {
         ease: 'power2.inOut',
         onStart: () => {
             closeSideModal();
-            controls.enableRotate = false;
-            controls.enableZoom = false;
-            controls.enablePan = false;
+            createControlBlocker();
 
         },
         onUpdate: () => {
@@ -104,9 +123,7 @@ export function focusCameraWithoutComplete(camera, controls, params) {
             controls.target.set(tweenObj.tgtX, tweenObj.tgtY, tweenObj.tgtZ);
             controls.update();
         }, onComplete: () => {
-            controls.enableRotate = true;
-            controls.enableZoom = true;
-            controls.enablePan = true;
+           removeControlBlocker();
         }
     });
 }
@@ -160,9 +177,7 @@ export function focusObjectWithoutComplete(camera, controls, params, gameObject,
         duration: params.duration || 1.5,
         ease: 'power2.inOut',
         onStart: () => {
-            controls.enableRotate = false;
-            controls.enableZoom = false;
-            controls.enablePan = false;
+           createControlBlocker();
         },
         onUpdate: () => {
             camera.position.set(tweenObjCam.camX, tweenObjCam.camY, tweenObjCam.camZ);
@@ -180,9 +195,7 @@ export function focusObjectWithoutComplete(camera, controls, params, gameObject,
                 openFlipBook();
             }
             gameObject.userData.clickable = true; // Reset clickable state
-            controls.enableRotate = true;
-            controls.enableZoom = true;
-            controls.enablePan = true;
+            removeControlBlocker();
 
         }
     });
