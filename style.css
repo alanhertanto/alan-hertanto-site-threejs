@@ -3,6 +3,10 @@ body {
   margin: 0px;
 }
 
+#webgl-canvas{
+  display: block;
+}
+
 #ui-buttons {
   position: fixed;
   /* Stay in place on screen */

@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 
-import { instantiateAllFilesFromFolder, loadJSONConfig } from './helper.js';
-import { initLighting } from './lightingController.js';
-import { getCameraControls, initCameraControls } from './cameraController.js';
-import { getComposer, initProcessing } from './postProcessController.js';
-import { initRendererControls, getRendererControls } from './rendererController.js';
-import { initAllListener, addButtonListenerForCameraMovement } from './eventListenerController.js';
-import { initDebugControls, checkCameraChanges, createCameraState } from './debugController.js';
+import { instantiateAllFilesFromFolder, loadJSONConfig } from './src/three/helper.js';
+import { initLighting } from './src/three/lightingController.js';
+import { getCameraControls, initCameraControls } from './src/three/cameraController.js';
+import { getComposer, initProcessing } from './src/three/postProcessController.js';
+import { initRendererControls, getRendererControls } from './src/three/rendererController.js';
+import { initAllListener, addButtonListenerForCameraMovement } from './src/three/eventListenerController.js';
+import { initDebugControls, checkCameraChanges, createCameraState } from './src/three/debugController.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
