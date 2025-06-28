@@ -15,62 +15,6 @@ body {
   position:absolute;
 }
 
-#ui-buttons {
-  position: fixed;
-  /* Stay in place on screen */
-  bottom: 20px;
-  /* 20px from bottom edge */
-  left: 20px;
-  /* 20px from left edge */
-  display: none;
-  /* Hidden by default */
-  flex-direction: column;
-  /* Stack multiple buttons vertically, but you’ll have only 1 */
-  gap: 10px;
-  /* Space between buttons if more than one */
-  z-index: 1000;
-  /* Make sure it's above the canvas */
-  width: 150px;
-  height: 150px;
-}
-
-#ui-buttons button {
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  width: inherit;
-  height: inherit;
-}
-
-#btn1 {
-  background-image: url("src/UI/Button/Arrow\ Back.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: transparent !important;
-  border: none;
-  margin-bottom: 10px;
-  box-shadow: none;
-}
-
-#side-modal {
-  display: none;
-  position: absolute;
-  /* or absolute as needed */
-  background: white;
-  transform: translateX(100%);
-  /* Start offscreen */
-  transition: transform 0.3s ease;
-  /* Optional fallback */
-  border-radius: 25px;
-  border-color: #fff;
-  overflow-y: auto;
-}
-
-#side-modal-content {
-  width: 100%;
-  overflow: auto;
-  height: 100%;
-}
 
 #side-modal-label {
   border-color: #3C3C43;
@@ -88,26 +32,6 @@ body {
   vertical-align: middle;
 }
 
-#side-modal-content h2 {
-  z-index: 2;
-  padding: 10px 25px 0px 25px;
-  font-size: 2rem;
-  margin-bottom: 0px;
-}
-
-#side-modal-content p {
-  z-index: 2;
-  padding: 0px 25px 10px 25px;
-  font-size: 1.5rem;
-}
-
-.mySwiper {
-  z-index: 2;
-  width: 90%;
-  height: 50%;
-  border-radius: 1vw;
-}
-
 .side-modal-image {
   width: inherit;
   height: inherit;
@@ -115,80 +39,8 @@ body {
   border-radius: 1vw;
 }
 
-/* Popup styling */
-#popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-
-}
-
 #popup img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 8px;
-}
-
-#popup.hidden {
-  display: none;
-}
-
-#popup-book {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#book {
-  width: 100%;
-  height: 100%;
-}
-
-#popup-book.hidden {
-  display: none;
-}
-
-#popup-book-close {
-  position: absolute;
-  top: 2vh;
-  right: 4vw;
-  color: #fff;
-  font-size: 40px;
-  cursor: pointer;
-}
-
-#popup-close {
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  color: black;
-  font-size: 40px;
-  cursor: pointer;
-  z-index: 3000;
-}
-
-#popup-book-download {
-  position: absolute;
-  bottom: 2vh;
-  right: 4vw;
-  font-size: 20px;  
-  width: 12vw;
-  height: 5vh;
-  background-color: #fff;
-  border-radius: 2vw;
-  text-align: center;
-  line-height: 5vh;
 }

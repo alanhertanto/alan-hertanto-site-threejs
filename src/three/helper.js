@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { getDebugModeState } from './debugController';
 // ✅ Fungsi memuat semua file di folder
 
-const lightweightMode = false;
+const lightweightMode = true;
 
 export function instantiateAllFilesFromFolder(scene, clickableGroups, clickableConfigs, modalConfigs) {
     const files = import.meta.glob('../models/*.glb', { as: 'url' });

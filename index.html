@@ -14,39 +14,39 @@
 
     <div id="root"></div>
 
-    <div id="side-modal">
-      <div id="side-modal-content">
-        <h2 class="side-modal-title"></h2>
-        <p class="side-modal-description"></p>
-        <div class="swiper mySwiper">
+    <div id="side-modal" class="modal hidden absolute bg-white rounded-2xl border-10 border-white overflow-y-auto z-1000 transition-transform duration-300 ease-in-out translate-x-full">
+      <div id="side-modal-content" class="w-full h-full overflow-auto">
+        <h2 class="side-modal-title mb-0 z-2 pt-10 pr-15 pl-15 text-3xl center"></h2>
+        <p class="side-modal-description z-2 pt-2 pr-15 pl-15 text-2xl pb-5 center"></p>
+        <div class="swiper mySwiper rounded-sm h-1/2 w-90/100 z-2">
           <div class="swiper-wrapper">
           </div>
           <div class="swiper-button-next"></div>
           <div class="swiper-button-prev"></div>
         </div>
-        <h2 class="side-modal-image-title"></h2>
-        <p class="side-modal-image-description"></p>
+        <h2 class="side-modal-image-title mb-0 z-2 pt-10 pr-15 pl-15 text-3xl center"></h2>
+        <p class="side-modal-image-description z-2 pt-2 pr-15 pl-15 mb-2 text-2xl center"></p>
       </div>
     </div>
 
     <!-- Popup for image -->
-    <div id="popup" class="hidden">
-      <span id="popup-close">&times;</span>
+    <div id="popup" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-1000 flex items-center justify-center">
+      <span id="popup-close" class="absolute top-20 right-40 text-black text-[4dvw 4dvh] cursor-pointer z-3000">&times;</span>
       <img id="popup-img" src="" alt="Full view">
     </div>
 
 
-    <div id="popup-book" class="hidden">
-      <span id="popup-book-close">&times;</span>
-      <div id="book">
+    <div id="popup-book" class="hidden fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-black bg-opacity-80 z-1000 flex items-center justify-center">
+      <span id="popup-book-close" class="absolute top-[2dvh] right-[4vw] text-white text-[40px] cursor-pointer">&times;</span>
+      <div id="book" class="w-[89%] h-[89%]">
       </div>
-      <span id="popup-book-download">
-        <a href="./src/my-resume.pdf" download="resume_alan_hertanto_guspermana">Download My Resume</a>
+      <span id="popup-book-download" >
+        <a href="./src/my-resume.pdf" download="resume_alan_hertanto_guspermana" class="btn btn-neutral btn-wide absolute bottom-[2dvh] right-[4vw] text-xl w-[12dvw] h-[5dvh] rounded">Download My Resume</a>
       </span>
     </div>
     <!-- Hidden buttons on top -->
-    <div id="ui-buttons">
-      <button id="btn1"></button>
+    <div id="ui-buttons" class="fixed w-[2dvw] h-[2dvh] bottom-[8dvh] left-[2dvw] hidden z-1000 gap-10 flex-col">
+      <button id="btn1" class="text-sm w-full h-full cursor-pointer border-0 shadow-none bg-[url(src/UI/Button/ArrowBack.png)] bg-no-repeat bg-cover bg-transparent"></button>
     </div>
   </div>
 
