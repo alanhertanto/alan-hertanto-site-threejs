@@ -28,7 +28,7 @@
             }
         ],
         "modalConfig": {
-            "top": "30%",
+            "top": "15%",
             "right": "10%",
             "width": "80vw",
             "max-width": "800px",
@@ -65,7 +65,7 @@
             }
         ],
         "modalConfig": {
-            "top": "30%",
+            "top": "15%",
             "right": "10%",
             "width": "80vw",
             "max-width": "800px",
